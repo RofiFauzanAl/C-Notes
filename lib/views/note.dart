@@ -12,18 +12,26 @@ class Note extends StatefulWidget{
 
   Note(this.noteMode, this.index);
 
-  @override
-  _NoteState createState(){
-    return _NoteState();
+   @override
+  _NoteState createState() {
+    return new _NoteState();
   }
 }
 
 class _NoteState extends State<Note> {
-  
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _textController = TextEditingController();
 
   List<Map<String, String>>get _notes => NoteInheritedWidget.of(context).notes;
+
+  @override
+  void didChangeDependencies() {
+    if (widget.noteMode == NoteMode.editingNote) {
+      _titleController.text = _notes[widget.index]['title']!;
+      _textController.text = _notes[widget.index]['text']!;
+    }
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context){
@@ -52,7 +60,7 @@ class _NoteState extends State<Note> {
                 controller: _textController,
                 decoration: InputDecoration(
                   hintText: 'Note Text',
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(), 
                 ),
                 maxLines: 20,
               ),
@@ -82,6 +90,7 @@ class _NoteState extends State<Note> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: noteButton('Delete', Colors.red, () { 
+                        _notes.removeAt(widget.index);
                         Navigator.pop(context);
                       }),    
                     )
@@ -96,12 +105,11 @@ class _NoteState extends State<Note> {
   }
 }
 
-
 class noteButton extends StatelessWidget{
 
-  final  String _text;
+  final String _text;
   final Color _color;
-  final void Function()? _onPressed;
+  final Function() _onPressed;
   final color = Colors.white;
 
   noteButton(this._text, this._color, this._onPressed);
@@ -109,11 +117,12 @@ class noteButton extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     return MaterialButton(
-      onPressed: _onPressed,
-      child: Text(
-          _text,
-          style: TextStyle(color: color),
-        ),
+      onPressed: _onPressed,child: Text(
+        _text,
+        style: TextStyle(color: Colors.white),
+      ),
+      height: 40,
+      minWidth: 100,
       color: _color,
     );
   }

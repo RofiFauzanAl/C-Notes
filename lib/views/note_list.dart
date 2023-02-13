@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 
 class NoteList extends StatefulWidget {
   @override
-  State<NoteList> createState() => _NoteListState();
+  _NoteListState createState(){
+    return new _NoteListState();
+  }
 }
 
 class _NoteListState extends State<NoteList> {
-  List<Map<String, String>>get _notes => NoteInheritedWidget.of(context).notes;
+  List<Map<String, String>> get _notes => NoteInheritedWidget.of(context).notes;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +34,7 @@ class _NoteListState extends State<NoteList> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     _NoteTitle(_notes[index]['title']!),
-                    Container(height: 4,),
+                    Container(height: 3,),
                     _NoteText(_notes[index]['text']!),
                   ],
                 ),
