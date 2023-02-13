@@ -19,8 +19,8 @@ class NoteInheritedWidget extends InheritedWidget {
 
   NoteInheritedWidget(Widget child) : super(child: child);
 
-  static NoteInheritedWidget of(BuildContext context){
-    return (context.dependOnInheritedWidgetOfExactType<NoteInheritedWidget>() as NoteInheritedWidget);
+  static NoteInheritedWidget of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<NoteInheritedWidget>()!;
   }
   
   @override
