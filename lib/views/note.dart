@@ -51,7 +51,7 @@ class Note extends StatelessWidget{
                   }),
                   noteMode == NoteMode.editingNote ?
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(1.0),
                       child: noteButton('Delete', Colors.red, () { 
                         Navigator.pop(context);
                       }),    
