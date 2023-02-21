@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:class_notes/inherited_widgets/note_inherited_widget.dart';
-import 'package:class_notes/views/note_list.dart';
-// import 'dart:html';
+import 'package:note_keeper/view/category_notes.dart';
 
-void main() => runApp(App());
+void main() {
+  runApp(MyApp());
+}
 
-class App extends  StatelessWidget {
+class MyApp extends StatelessWidget{
+
   @override
-  Widget build(BuildContext context) {
-    return NoteInheritedWidget(
-      MaterialApp(
-      title: 'C-Notes',
-      home: NoteList(),
+  Widget build(BuildContext context){
+    return MaterialApp(
+      title: 'Note Keeper',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.cyan,
       ),
+      home: CategoryNotes(),
     );
   }
+
 }

@@ -1,6 +1,6 @@
 {
-    "name": "class_notes",
-    "short_name": "class_notes",
+    "name": "note_keeper",
+    "short_name": "note_keeper",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
