@@ -96,10 +96,13 @@ class _CategoryNotesState extends State<CategoryNotes> {
     _loadCategories();
   }
 
-  // Update an existing journal
+  // Update an existing category
   Future<void> _updateCategory(int id) async {
     await CreateDatabase.updateCategory(
-        id, _titleControllerCategory.text);
+        id, _titleControllerCategory.text, DateFormat('dd/MM/yyyy').format(now));
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Successfully updated category!'),
+    ));
     _loadCategories();
   }
 
@@ -107,7 +110,7 @@ class _CategoryNotesState extends State<CategoryNotes> {
   void _deleteItem(int id) async {
     await CreateDatabase.deleteCategory(id);
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      content: Text('Successfully deleted a journal!'),
+      content: Text('Successfully deleted category!'),
     ));
     _loadCategories();
   }

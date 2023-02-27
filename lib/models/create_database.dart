@@ -106,11 +106,12 @@ class CreateDatabase{
     return id;
   }
 
-  static Future<int> updateCategory(int id, String title) async {
+  static Future<int> updateCategory(int id, String title, String dateNow) async {
     final db = await CreateDatabase.db();
     final data = {
-      'id_category': title,
-      'createCategoryAt': DateTime.now().toString()
+      'id_category': id,
+      'name_category': title,
+      'createCategoryAt': dateNow
     };
 
     final result = await db.update('category_notes', data, where: "id_category = ?", whereArgs: [id]);
