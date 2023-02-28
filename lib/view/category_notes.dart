@@ -115,7 +115,6 @@ class _CategoryNotesState extends State<CategoryNotes> {
     _loadCategories();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,31 +124,71 @@ class _CategoryNotesState extends State<CategoryNotes> {
       ),
       body: _isLoading
             ? const Center(
-                        child: CircularProgressIndicator(),
-                        )
-          : ListView.builder(
-            itemCount: _categories.length,
-            itemBuilder: (context, index) {
-              return Card(
-              color: Color.fromARGB(255, 26, 100, 161),
-              margin: EdgeInsets.all(15),
-              child: ListTile(
-                title: Text(_categories[index]['name_category']),
-                subtitle: Text(_categories[index]['createCategoryAt']),
-                textColor: Colors.white,
-                trailing: SizedBox(
-                  width: 100,
-                  child: Row(
-                    children: [
-                      IconButton(onPressed: ()=>_showForm(_categories[index]['id_category']), icon: const Icon(Icons.edit)),
-                      IconButton(onPressed: ()=>_deleteItem(_categories[index]['id_category']), icon: const Icon(Icons.delete)),
-                    ],
-                  ),
+                child: CircularProgressIndicator(),
+              )
+          : Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 15,
+                  crossAxisSpacing: 15,
                 ),
+                itemCount: _categories.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    color: Color.fromARGB(255, 26, 100, 161),
+                    margin: EdgeInsets.zero,
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.fromLTRB(15, 0, 0, 15),
+                      title: Text(
+                        _categories[index]['name_category'],
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      subtitle: Text(
+                        _categories[index]['createCategoryAt'],
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                        ),
+                      ),
+                      trailing: PopupMenuButton(
+                        onSelected: (value) {
+                          switch (value) {
+                            case 'edit':
+                              _showForm(_categories[index]['id_category']);
+                              break;
+                            case 'delete':
+                              _deleteItem(_categories[index]['id_category']);
+                              break;
+                            default:
+                              break;
+                          }
+                        },
+                        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                          const PopupMenuItem<String>(
+                            value: 'edit',
+                            child: ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: Icon(Icons.edit, size: 18),
+                              title: Text('Edit', style: TextStyle(fontSize: 15)),
+                            ),
+                          ),
+                          const PopupMenuItem<String>(
+                            value: 'delete',
+                            child: ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: Icon(Icons.delete, size: 18),
+                              title: Text('Delete', style: TextStyle(fontSize: 15)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               ),
-            );
-            },
-          ),
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: (() => _showForm(null)),
         child: const Icon(Icons.add),
