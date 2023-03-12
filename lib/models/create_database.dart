@@ -1,11 +1,12 @@
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 
 class CreateDatabase{
+  
+  //Model Category Notes
   static Future<void> createTablesCategory(sql.Database database) async{
     await database.execute('''
       CREATE TABLE category_notes(
@@ -16,6 +17,7 @@ class CreateDatabase{
     ''');
   }
 
+  //Model Notes
   static Future<void> createTablesNotes(sql.Database database) async{
     await database.execute('''
       CREATE TABLE notes(
@@ -31,6 +33,7 @@ class CreateDatabase{
     ''');
   }
 
+  //Model Logbook
   static Future<void> createLogbook(sql.Database database) async{
     await database.execute('''
       CREATE TABLE logbooks(
@@ -51,6 +54,7 @@ class CreateDatabase{
     ''');
   }
   
+  //Create Database
   static Future<sql.Database> db() async{
     return sql.openDatabase(
       'myDatabase.db',
@@ -62,32 +66,6 @@ class CreateDatabase{
       }
     );
   }
-
-  // CreateDatabase._privateConstructor();
-  // static final CreateDatabase instance =
-  //     CreateDatabase._privateConstructor();
-
-  // static sql.Database? _database;
-  // Future<sql.Database> get database async {
-  //   if (_database != null) return _database!;
-  //   _database = await _initDatabase();
-  //   return _database!;
-  // }
-
-  // _initDatabase() async {
-  //   Directory? documentsDirectory = await getApplicationDocumentsDirectory();
-  //   // ignore: unnecessary_null_comparison
-  //   if (documentsDirectory == null) {
-  //     throw Exception("Failed to get application documents directory");
-  //   }
-  //   String path = join(documentsDirectory.path, 'myDatabase.db');
-  //   return await sql.openDatabase(path, version: 1,
-  //       onCreate: (sql.Database db, int version) async {
-  //     await createTablesCategory(db);
-  //     await createTablesNotes(db);
-  //     await createLogbook(db);
-  //   });
-  // }
   
   Future<List<Map<String, dynamic>>> queryAllCategory() async {
     sql.Database db = await CreateDatabase.db();
@@ -106,6 +84,7 @@ class CreateDatabase{
     return id;
   }
 
+  //update Category
   static Future<int> updateCategory(int id, String title, String dateNow) async {
     final db = await CreateDatabase.db();
     final data = {
@@ -118,7 +97,7 @@ class CreateDatabase{
     return result;
   }
 
-  // Delete
+  // Delete Category
   static Future<void> deleteCategory(int id) async {
     final db = await CreateDatabase.db();
     try {

@@ -37,25 +37,16 @@ class _CategoryNotesState extends State<CategoryNotes> {
   void _showForm(int? id) async {
     _titleControllerCategory.text = '';
     if (id != null) {
-      // id == null -> create new item
-      // id != null -> update an existing item
       final existingCategory =
-      _categories.firstWhere((element) => element['id_category'] == id);
+          _categories.firstWhere((element) => element['id_category'] == id);
       _titleControllerCategory.text = existingCategory['name_category'];
     }
 
-    showModalBottomSheet(
-        context: context,
-        elevation: 5,
-        isScrollControlled: true,
-        builder: (_) => Container(
-          padding: EdgeInsets.only(
-            top: 15,
-            left: 15,
-            right: 15,
-            // this will prevent the soft keyboard from covering the text fields
-            bottom: MediaQuery.of(context).viewInsets.bottom + 120,
-          ),
+    await showDialog(
+      context: context,
+      builder: (_) => Dialog(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -78,14 +69,15 @@ class _CategoryNotesState extends State<CategoryNotes> {
                   }
                   // Clear the text fields
                   _titleControllerCategory.text = '';
-                  // Close the bottom sheet
+                  // Close the dialog
                   Navigator.of(context).pop();
                 },
                 child: Text(id == null ? 'Create New' : 'Update'),
               )
             ],
           ),
-        )
+        ),
+      ),
     );
   }
 
@@ -119,40 +111,40 @@ class _CategoryNotesState extends State<CategoryNotes> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Class Notes'),
-        backgroundColor: Colors.white12,
+        // title: const Text('\n\nClass Notes'),
+        backgroundColor: Color.fromARGB(255, 230, 228, 228),
       ),
       body: _isLoading
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-          : Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 15,
-                  crossAxisSpacing: 15,
+        ? const Center(
+          child: CircularProgressIndicator(),
+        )
+        : Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 15,
+              crossAxisSpacing: 15,
+            ),
+            itemCount: _categories.length,
+            itemBuilder: (context, index) {
+              return Card(
+                color: Color.fromARGB(255, 26, 100, 161),
+                margin: EdgeInsets.zero,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  side: BorderSide(
+                    color: Colors.grey.withOpacity(0.2),
+                    width: 1,
+                  ),
                 ),
-                itemCount: _categories.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    color: Color.fromARGB(255, 26, 100, 161),
-                    margin: EdgeInsets.zero,
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.fromLTRB(15, 0, 0, 15),
-                      title: Text(
-                        _categories[index]['name_category'],
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                      subtitle: Text(
-                        _categories[index]['createCategoryAt'],
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                        ),
-                      ),
-                      trailing: PopupMenuButton(
+                child: Padding(
+                  padding: const EdgeInsets.all(1.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      PopupMenuButton(
                         onSelected: (value) {
                           switch (value) {
                             case 'edit':
@@ -169,30 +161,98 @@ class _CategoryNotesState extends State<CategoryNotes> {
                           const PopupMenuItem<String>(
                             value: 'edit',
                             child: ListTile(
-                              contentPadding: EdgeInsets.zero,
-                              leading: Icon(Icons.edit, size: 18),
-                              title: Text('Edit', style: TextStyle(fontSize: 15)),
+                              leading: Icon(Icons.edit, size: 20),
+                              title: Text('Edit', style: TextStyle(fontSize: 15), textAlign: TextAlign.left,),
                             ),
                           ),
                           const PopupMenuItem<String>(
                             value: 'delete',
                             child: ListTile(
-                              contentPadding: EdgeInsets.zero,
-                              leading: Icon(Icons.delete, size: 18),
-                              title: Text('Delete', style: TextStyle(fontSize: 15)),
+                              leading: Icon(Icons.delete, size: 20),
+                              title: Text('Delete', style: TextStyle(fontSize: 15), textAlign: TextAlign.left,),
                             ),
                           ),
                         ],
+                        icon: const Icon(Icons.more_vert, size: 18),
+                        padding: EdgeInsets.zero,
                       ),
-                    ),
-                  );
-                },
+                      const SizedBox(
+                        height: 65,
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left : 8.0),
+                          child: Text(
+                            _categories[index]['name_category'],
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left : 8.0, bottom: 5.0),
+                        child: Text(
+                          // _categories[index]['createCategoryAt'],
+                          "Create At: ${_categories[index]['createCategoryAt']}",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      drawer: Drawer(
+        // Add a ListView to the drawer. This ensures the user can scroll
+        // through the options in the drawer if there isn't enough vertical
+        // space to fit everything.
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
               ),
+              child: Text('Drawer Header'),
             ),
+            ListTile(
+              title: const Text('Item 1'),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Item 2'),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: (() => _showForm(null)),
         child: const Icon(Icons.add),
-      )
+      ),
     );
   }
 
